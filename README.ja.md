@@ -4,6 +4,8 @@
 
 ## Slack Thread Bot
 
+<img width="120" alt="Image" src="_assets/icon.svg">
+
 **Author:** solaoi
 **Version:** 0.0.1
 **Type:** 拡張機能
