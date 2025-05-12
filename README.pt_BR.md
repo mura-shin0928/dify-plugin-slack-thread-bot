@@ -41,12 +41,16 @@ https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_b
 
 No nó inicial do aplicativo Chat Flow vinculado a este plugin, você pode fazer referência ao histórico de conversa da thread e à lista de usuários na thread usando os seguintes argumentos:
 
+<img width="407" alt="Image" src="https://github.com/user-attachments/assets/fa979598-0010-41b5-be28-d855a16ac150" />
+
 ```
 thread_history: Parágrafo, comprimento máximo (ex. 65535)
 thread_users: Parágrafo, comprimento máximo (ex. 65535)
 ```
 
 Exemplo (nó LLM em um aplicativo Chat Flow):
+
+<img width="1285" alt="Image" src="https://github.com/user-attachments/assets/88af22fc-fe9c-43bd-95cd-aae00f174ead" />
 
 ```
 Você é um assistente no Slack que responde às perguntas dos usuários.
