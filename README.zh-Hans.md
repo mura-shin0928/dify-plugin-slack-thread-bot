@@ -41,12 +41,16 @@ https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_b
 
 将此插件关联到你的 Chat Flow 应用后，你可以在起始节点中通过以下参数获取线程会话历史和线程用户列表：
 
+<img width="409" alt="Image" src="https://github.com/user-attachments/assets/fe84c567-0e56-456e-8ea4-b41f2d43e854" />
+
 ```
 thread_history：段落，最大长度（如 65535）
 thread_users：段落，最大长度（如 65535）
 ```
 
 示例（Chat Flow 应用中的 LLM 节点）：
+
+<img width="1286" alt="Image" src="https://github.com/user-attachments/assets/03ec5de8-ebfd-40a3-9af8-3dc59ed830e5" />
 
 ```
 你是一名在 Slack 上回答用户问题的助手。
