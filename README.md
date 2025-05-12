@@ -41,12 +41,16 @@ https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_b
 
 In the start node of the chat flow app that you link to this plugin, you can reference the conversation history and the list of users in the thread using the following arguments:
 
+<img width="414" alt="Image" src="https://github.com/user-attachments/assets/443ea297-512a-4f5f-8296-fba4ecb45f25" />
+
 ```
 thread_history: Paragraph, maximum length (eg. 65535)
 thread_users: Paragraph, maximum length (eg. 65535)
 ```
 
 Example (LLM node in the chat flow app):
+
+<img width="1286" alt="Image" src="https://github.com/user-attachments/assets/91a58bc1-02e0-4481-8cbe-6187298e6dd7" />
 
 ```
 You are an assistant on Slack who answers user questions.
