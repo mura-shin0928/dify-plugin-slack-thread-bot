@@ -319,29 +319,44 @@ class SlackEndpoint(Endpoint):
 
                     try:
                         converter = SlackMarkdownConverter()
-                        answer_blocks = [
-                            {
-                                "type": "section",
-                                "text": {
-                                    "type": "mrkdwn",
-                                    "text": converter.convert(answer)
-                                }
-                            }
+                        converted_answer = converter.convert(answer)
+
+                        # Slackで指定されている3,000文字以上の場合は分割
+                        # https://api.slack.com/reference/block-kit/composition-objects#text__fields
+                        MAX_MSG_LEN = 3000
+                        chunks = [
+                            converted_answer[i : i + MAX_MSG_LEN]
+                            for i in range(0, len(converted_answer), MAX_MSG_LEN)
                         ]
 
+                        # ブロードキャストするかどうか
                         reply_broadcast = settings.get("first_reply_broadcast", False) and len(thread_history) == 1
-                        # Send the response back to Slack
-                        client.chat_postMessage(
-                            channel=channel,
-                            text=answer, # fallback用のテキスト
-                            thread_ts=thread_ts,  # This ensures the response is in the same thread
-                            blocks=answer_blocks,
-                            reply_broadcast=reply_broadcast
-                        )
 
-                        return Response(
-                            status=200, response="ok", content_type="text/plain"
-                        )
+                        for i, chunk in enumerate(chunks):
+                            # 分割したチャンクを blocks に載せる
+                            answer_blocks = [
+                                {
+                                    "type": "section",
+                                    "text": {
+                                        "type": "mrkdwn",
+                                        "text": chunk
+                                    }
+                                }
+                            ]
+                            # 2つ目以降のメッセージでブロードキャストされるとスレッド外にも大量に通知されてしまうので、
+                            # 必要に応じて一度目のみブロードキャストにする
+                            chunk_reply_broadcast = reply_broadcast if i == 0 else False
+
+                            client.chat_postMessage(
+                                channel=channel,
+                                text=chunk,  # fallback用テキスト
+                                thread_ts=thread_ts,
+                                blocks=answer_blocks,
+                                reply_broadcast=chunk_reply_broadcast
+                            )
+
+                        return Response(status=200, response="ok", content_type="text/plain")
+
                     except SlackApiError as e:
                         return Response(
                             status=200,
