@@ -301,6 +301,7 @@ class SlackEndpoint(Endpoint):
                             "thread_users": json.dumps(
                                 user_display_name_map, indent=4, ensure_ascii=False
                             ),
+                            "thread_ts": thread_ts,
                         },
                         "response_mode": "blocking",
                     }
