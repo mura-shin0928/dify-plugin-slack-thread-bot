@@ -1,4 +1,4 @@
-*Read this in other languages: [日本語](README.ja.md), [简体中文](README.zh-Hans.md), [Português](README.pt_BR.md).*
+*Read this in other languages: [日本語](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.1/README.ja.md), [简体中文](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.1/README.zh-Hans.md), [Português](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.1/README.pt_BR.md).*
 
 ![license](https://img.shields.io/github/license/solaoi/dify-plugin-slack-thread-bot)
 
@@ -20,18 +20,18 @@ Slack bot plugin supporting thread replies (optionally posting the first reply i
 - Support for Slack `mrkdwn` formatting in replies
 - Access to thread conversation history and user information from a linked app
 
-#### Install
+#### 1. Install
 
 To install this plugin, specify the following GitHub repository when selecting "Install Plugin":
 
 https://github.com/solaoi/dify-plugin-slack-thread-bot
 
-#### Setup
+#### 2. Setup
 
 Follow the same setup procedure as the official SlackBot plugin.
 However, this plugin requires different scopes:
 
-```
+```text
 app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write
 ```
 
@@ -39,22 +39,26 @@ For details on how to set up the official SlackBot plugin, see:
 
 https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_bot/README.md
 
-#### How to use
+#### 3. How to use
 
 In the start node of the chat flow app that you link to this plugin, you can reference the conversation history and the list of users in the thread using the following arguments:
 
-<img width="414" alt="Image" src="https://github.com/user-attachments/assets/443ea297-512a-4f5f-8296-fba4ecb45f25" />
+<div align="left">
+  <img src="_assets/how_to_use_1_en.png" width="50%"/>
+</div>
 
-```
-thread_history: Paragraph, maximum length (eg. 65535)
-thread_users: Paragraph, maximum length (eg. 65535)
-```
+| INPUT FIELD | FIELD TYPE |
+| ---- | ---- |
+| thread_history | Paragraph, maximum length (eg. 65535) |
+| thread_users | Paragraph, maximum length (eg. 65535) |
 
 Example (LLM node in the chat flow app):
 
-<img width="1286" alt="Image" src="https://github.com/user-attachments/assets/91a58bc1-02e0-4481-8cbe-6187298e6dd7" />
+<div align="left">
+  <img src="_assets/how_to_use_2_en.png" width="80%"/>
+</div>
 
-```
+```text
 You are an assistant on Slack who answers user questions.
 Refer to the recent conversation history and provide an appropriate response.
 
