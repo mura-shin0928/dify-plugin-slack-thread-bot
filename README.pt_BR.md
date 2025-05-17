@@ -18,7 +18,10 @@ Plugin de bot do Slack com suporte a respostas em thread (opção de postar a pr
 
 - Responde dentro de threads no Slack (com a opção de também postar a primeira resposta no canal)
 - Suporte a formatação `mrkdwn` do Slack nas respostas
-- Acesso ao histórico de conversa de uma thread e às informações de usuário a partir de um aplicativo vinculado
+- Acesso ao histórico de conversa de uma thread, às informações de usuário e ao timestamp da thread do Slack ( `thread_ts` ) a partir de um aplicativo vinculado
+
+> [!NOTE]
+> O `thread_ts` é principalmente fornecido para casos de uso avançados. Na maioria dos cenários, você provavelmente não precisará utilizá-lo.
 
 #### 1. Instalação
 
@@ -49,8 +52,9 @@ No nó inicial do aplicativo Chat Flow vinculado a este plugin, você pode fazer
 
 | Campo de Entrada | Tipo de Campo |
 | ---- | ---- |
-| thread_history | Parágrafo, comprimento máximo (ex. 65535) |
-| thread_users | Parágrafo, comprimento máximo (ex. 65535) |
+| thread_history | Parágrafo, Comprimento Máximo (ex.: 65535) |
+| thread_users | Parágrafo, Comprimento Máximo (ex.: 65535) |
+| thread_ts | Texto Curto, Comprimento Máximo (ex.: 48 por padrão) |
 
 Exemplo (nó LLM em um aplicativo Chat Flow):
 

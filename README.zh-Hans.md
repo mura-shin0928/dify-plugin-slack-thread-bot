@@ -18,7 +18,10 @@
 
 - 在 Slack 线程中回复（可选设置同时在频道中发送首条回复）
 - 在回复中支持 Slack `mrkdwn` 格式
-- 从关联的应用中访问线程会话历史和用户信息
+- 从关联的应用中访问线程会话历史、用户信息，以及 Slack 线程时间戳（ `thread_ts` ）
+
+> [!NOTE]
+> `thread_ts` 主要为高级用例提供。在大多数情况下，您可能不需要使用它。
 
 #### 1. 安装
 
@@ -51,6 +54,7 @@ https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_b
 | ---- | ---- |
 | thread_history | 段落，最大长度（如 65535） |
 | thread_users | 段落，最大长度（如 65535） |
+| thread_ts | 文本, 最大长度（如 48，默认） |
 
 示例（Chat Flow 应用中的 LLM 节点）：
 

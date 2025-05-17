@@ -18,7 +18,10 @@ Slack bot plugin supporting thread replies (optionally posting the first reply i
 
 - Reply within Slack threads (with an optional setting to also post the first reply in the channel)
 - Support for Slack `mrkdwn` formatting in replies
-- Access to thread conversation history and user information from a linked app
+- Access to thread conversation history, user information, and the Slack thread timestamp (`thread_ts`) from a linked app
+
+> [!NOTE]
+> The `thread_ts` is primarily provided for advanced use cases. In most scenarios, you likely won't need to use it.
 
 #### 1. Install
 
@@ -49,8 +52,9 @@ In the start node of the chat flow app that you link to this plugin, you can ref
 
 | INPUT FIELD | FIELD TYPE |
 | ---- | ---- |
-| thread_history | Paragraph, maximum length (eg. 65535) |
-| thread_users | Paragraph, maximum length (eg. 65535) |
+| thread_history | Paragraph, Max length (e.g., 65535) |
+| thread_users | Paragraph, Max length (e.g., 65535) |
+| thread_ts | Short Text, Max length (e.g., 48: Default) |
 
 Example (LLM node in the chat flow app):
 
