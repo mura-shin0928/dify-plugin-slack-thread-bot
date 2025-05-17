@@ -12,13 +12,14 @@
 
 ### Descrição
 
-Plugin de bot do Slack com suporte a respostas em thread (opção de postar a primeira resposta no canal), formatação mrkdwn e acesso ao histórico de thread e lista de usuários.
+Plugin de bot do Slack para respostas em thread (opcionalmente postando a primeira resposta no canal), formatação mrkdwn, acesso ao histórico de thread e lista de usuários, e restrição opcional de canais de uso.
 
 #### Recursos
 
 - Responde dentro de threads no Slack (com a opção de também postar a primeira resposta no canal)
 - Suporte a formatação `mrkdwn` do Slack nas respostas
 - Acesso ao histórico de conversa de uma thread, às informações de usuário e ao timestamp da thread do Slack ( `thread_ts` ) a partir de um aplicativo vinculado
+- Restrição opcional a um único canal do Slack para maior segurança
 
 > [!NOTE]
 > O `thread_ts` é principalmente fornecido para casos de uso avançados. Na maioria dos cenários, você provavelmente não precisará utilizá-lo.
