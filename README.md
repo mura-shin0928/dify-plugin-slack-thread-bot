@@ -35,7 +35,8 @@ Follow the same setup procedure as the official SlackBot plugin.
 However, this plugin requires different scopes:
 
 ```text
-app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write
+app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write, channels:read,
+groups:read
 ```
 
 For details on how to set up the official SlackBot plugin, see:

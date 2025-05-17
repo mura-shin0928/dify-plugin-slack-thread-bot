@@ -35,7 +35,8 @@ Siga o mesmo procedimento de configuração do plugin oficial SlackBot.
 Entretanto, este plugin requer escopos diferentes:
 
 ```text
-app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write
+app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write, channels:read,
+groups:read
 ```
 
 Para mais detalhes sobre como configurar o plugin oficial SlackBot, consulte:

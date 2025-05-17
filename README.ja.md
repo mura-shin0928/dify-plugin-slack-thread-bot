@@ -35,7 +35,8 @@ https://github.com/solaoi/dify-plugin-slack-thread-bot
 ただし、本プラグインでは下記のスコープが必要となります。
 
 ```text
-app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write
+app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write, channels:read,
+groups:read
 ```
 
 公式のSlackBotプラグインのセットアップ手順については以下をご参照ください。

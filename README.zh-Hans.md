@@ -35,7 +35,8 @@ https://github.com/solaoi/dify-plugin-slack-thread-bot
 但需要注意的是，本插件所需的权限范围（scopes）不同：
 
 ```text
-app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write
+app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write, channels:read,
+groups:read
 ```
 
 有关如何设置官方 SlackBot 插件的详细信息，请参阅：
