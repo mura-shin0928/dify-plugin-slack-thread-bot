@@ -1,4 +1,4 @@
-*Leia em outros idiomas: [English](README.md), [日本語](README.ja.md), [简体中文](README.zh-Hans.md).*
+*Leia em outros idiomas: [English](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.1/README.md), [日本語](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.1/README.ja.md), [简体中文](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.1/README.zh-Hans.md).*
 
 ![license](https://img.shields.io/github/license/solaoi/dify-plugin-slack-thread-bot)
 
@@ -20,18 +20,18 @@ Plugin de bot do Slack com suporte a respostas em thread (opção de postar a pr
 - Suporte a formatação `mrkdwn` do Slack nas respostas
 - Acesso ao histórico de conversa de uma thread e às informações de usuário a partir de um aplicativo vinculado
 
-#### Instalação
+#### 1. Instalação
 
 Para instalar este plugin, ao selecionar "Instale o plugin", especifique o seguinte repositório do GitHub:
 
 https://github.com/solaoi/dify-plugin-slack-thread-bot
 
-#### Configuração
+#### 2. Configuração
 
 Siga o mesmo procedimento de configuração do plugin oficial SlackBot.
 Entretanto, este plugin requer escopos diferentes:
 
-```
+```text
 app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write
 ```
 
@@ -39,22 +39,26 @@ Para mais detalhes sobre como configurar o plugin oficial SlackBot, consulte:
 
 https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_bot/README.md
 
-#### Como usar
+#### 3. Como usar
 
 No nó inicial do aplicativo Chat Flow vinculado a este plugin, você pode fazer referência ao histórico de conversa da thread e à lista de usuários na thread usando os seguintes argumentos:
 
-<img width="407" alt="Image" src="https://github.com/user-attachments/assets/fa979598-0010-41b5-be28-d855a16ac150" />
+<div align="left">
+  <img src="_assets/how_to_use_1_pt.png" width="50%"/>
+</div>
 
-```
-thread_history: Parágrafo, comprimento máximo (ex. 65535)
-thread_users: Parágrafo, comprimento máximo (ex. 65535)
-```
+| Campo de Entrada | Tipo de Campo |
+| ---- | ---- |
+| thread_history | Parágrafo, comprimento máximo (ex. 65535) |
+| thread_users | Parágrafo, comprimento máximo (ex. 65535) |
 
 Exemplo (nó LLM em um aplicativo Chat Flow):
 
-<img width="1285" alt="Image" src="https://github.com/user-attachments/assets/88af22fc-fe9c-43bd-95cd-aae00f174ead" />
+<div align="left">
+  <img src="_assets/how_to_use_2_pt.png" width="80%"/>
+</div>
 
-```
+```text
 Você é um assistente no Slack que responde às perguntas dos usuários.
 Consulte o histórico recente de conversa e forneça uma resposta apropriada.
 
