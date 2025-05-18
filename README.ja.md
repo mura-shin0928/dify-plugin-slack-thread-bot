@@ -12,17 +12,18 @@
 
 ### 解説
 
-スレッド返信（初回返信をチャンネルにも投稿可）、mrkdwn対応、スレッド履歴・ユーザーリスト参照、任意で利用チャンネルを制限可能なSlackボットプラグイン。
+スレッド返信（初回返信をチャンネルにも投稿可）、Slackファイルアップロード、mrkdwn対応、スレッド履歴・ユーザーリスト参照、任意で利用チャンネルを制限可能なSlackボットプラグイン。
 
 #### 機能
 
 - スレッド内での返信（初回の返信をチャンネルにも投稿できるオプション付き）
+- Slackファイルのアップロード（紐づけたチャットフローアプリから、参照可能）
 - Slack 上での `mrkdwn` フォーマットに対応
-- 紐づけたチャットフローアプリから、スレッド履歴・ユーザー情報・Slackスレッドのタイムスタンプ（ `thread_ts` ）を参照可能
+- 紐づけたチャットフローアプリから、スレッド履歴・ユーザー情報・Slackスレッド情報（ `channel_id`, `thread_ts` ）を参照可能
 - 単一のSlackチャンネルへ利用を限定し、よりセキュアな運用を可能にするオプション
 
 > [!NOTE]
-> `thread_ts` は主に高度なユースケース向けの機能です。通常のシナリオでは使用しない場合がほとんどです。
+> `channel_id`, `thread_ts` は主に高度なユースケース向けの機能です。通常のシナリオでは使用しない場合がほとんどです。
 
 #### 1. インストール方法
 
@@ -37,7 +38,7 @@ https://github.com/solaoi/dify-plugin-slack-thread-bot
 
 ```text
 app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write, channels:read,
-groups:read
+groups:read, files:read
 ```
 
 公式のSlackBotプラグインのセットアップ手順については以下をご参照ください。
@@ -56,7 +57,9 @@ https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_b
 | ---- | ---- |
 | thread_history | 段落（例：最大長 65535） |
 | thread_users | 段落（例：最大長 65535） |
+| files | ファイルリスト |
 | thread_ts | 短文（例：最大長 48（デフォルト）） |
+| channel_id | 短文（例：最大長 48（デフォルト）） |
 
 例：チャットフローアプリ内のLLMノード
 

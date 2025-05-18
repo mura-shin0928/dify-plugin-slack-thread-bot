@@ -12,17 +12,18 @@
 
 ### 描述
 
-支持线程回复（可选将首次回复发送至频道）、mrkdwn格式、引用线程历史和用户列表、并可选限制使用频道的Slack机器人插件。
+支持线程回复（可选将首次回复发送至频道）、Slack 文件上传、mrkdwn 格式、引用线程历史和用户列表，并可选限制使用频道的 Slack 机器人插件。
 
 #### 功能
 
 - 在 Slack 线程中回复（可选设置同时在频道中发送首条回复）
+- Slack 文件上传（自动传递给关联的应用）
 - 在回复中支持 Slack `mrkdwn` 格式
-- 从关联的应用中访问线程会话历史、用户信息，以及 Slack 线程时间戳（ `thread_ts` ）
+- 从关联的应用中访问线程会话历史、用户信息，以及 Slack 线程信息（`channel_id`, `thread_ts`）
 - 可选择将使用范围限定至单个 Slack 频道，以实现更安全的使用
 
 > [!NOTE]
-> `thread_ts` 主要为高级用例提供。在大多数情况下，您可能不需要使用它。
+> `channel_id` 和 `thread_ts` 主要适用于高级用例。在大多数情况下，您可能不需要使用它们。
 
 #### 1. 安装
 
@@ -37,7 +38,7 @@ https://github.com/solaoi/dify-plugin-slack-thread-bot
 
 ```text
 app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write, channels:read,
-groups:read
+groups:read, files:read
 ```
 
 有关如何设置官方 SlackBot 插件的详细信息，请参阅：
@@ -56,7 +57,9 @@ https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_b
 | ---- | ---- |
 | thread_history | 段落，最大长度（如 65535） |
 | thread_users | 段落，最大长度（如 65535） |
+| files | 文件列表 |
 | thread_ts | 文本, 最大长度（如 48，默认） |
+| channel_id | 文本, 最大长度（如 48，默认） |
 
 示例（Chat Flow 应用中的 LLM 节点）：
 
