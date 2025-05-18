@@ -416,6 +416,7 @@ class SlackEndpoint(Endpoint):
                             user_display_name_map, indent=4, ensure_ascii=False
                         ),
                         "thread_ts": thread_ts,
+                        "channel_id": channel,
                     }
                     if uploaded_files:
                         app_invoke_inputs["files"] = [
