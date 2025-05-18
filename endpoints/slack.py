@@ -1,6 +1,7 @@
 import json
 import re
 import traceback
+import requests
 from typing import Mapping, List, Tuple
 from werkzeug import Request, Response
 from dify_plugin import Endpoint
@@ -30,25 +31,43 @@ class SlackMarkdownConverter:
         self.table_replacements = {}
         # Use compiled regex patterns for better performance
         self.patterns: List[Tuple[re.Pattern, str]] = [
-            (re.compile(r"^(\s*)- \[([ ])\] (.+)", re.MULTILINE), r"\1• ☐ \3"),  # Unchecked task list
-            (re.compile(r"^(\s*)- \[([xX])\] (.+)", re.MULTILINE), r"\1• ☑ \3"),  # Checked task list
+            (
+                re.compile(r"^(\s*)- \[([ ])\] (.+)", re.MULTILINE),
+                r"\1• ☐ \3",
+            ),  # Unchecked task list
+            (
+                re.compile(r"^(\s*)- \[([xX])\] (.+)", re.MULTILINE),
+                r"\1• ☑ \3",
+            ),  # Checked task list
             (re.compile(r"^(\s*)- (.+)", re.MULTILINE), r"\1• \2"),  # Unordered list
-            (re.compile(r"^(\s*)(\d+)\. (.+)", re.MULTILINE), r"\1\2. \3"),  # Ordered list
+            (
+                re.compile(r"^(\s*)(\d+)\. (.+)", re.MULTILINE),
+                r"\1\2. \3",
+            ),  # Ordered list
             (re.compile(r"!\[.*?\]\((.+?)\)", re.MULTILINE), r"<\1>"),  # Images to URL
-            (re.compile(r"(?<!\*)\*([^*\n]+?)\*(?!\*)", re.MULTILINE), r"_\1_"),  # Italic
-            (re.compile(r"^###### (.+)$", re.MULTILINE), r"*\1*"), # H6 as bold
-            (re.compile(r"^##### (.+)$", re.MULTILINE), r"*\1*"), # H5 as bold
-            (re.compile(r"^#### (.+)$", re.MULTILINE), r"*\1*"), # H4 as bold
+            (
+                re.compile(r"(?<!\*)\*([^*\n]+?)\*(?!\*)", re.MULTILINE),
+                r"_\1_",
+            ),  # Italic
+            (re.compile(r"^###### (.+)$", re.MULTILINE), r"*\1*"),  # H6 as bold
+            (re.compile(r"^##### (.+)$", re.MULTILINE), r"*\1*"),  # H5 as bold
+            (re.compile(r"^#### (.+)$", re.MULTILINE), r"*\1*"),  # H4 as bold
             (re.compile(r"^### (.+)$", re.MULTILINE), r"*\1*"),  # H3 as bold
             (re.compile(r"^## (.+)$", re.MULTILINE), r"*\1*"),  # H2 as bold
             (re.compile(r"^# (.+)$", re.MULTILINE), r"*\1*"),  # H1 as bold
-            (re.compile(r"(^|\s)~\*\*(.+?)\*\*(\s|$)", re.MULTILINE), r"\1 *\2* \3"),  # Bold with space handling
+            (
+                re.compile(r"(^|\s)~\*\*(.+?)\*\*(\s|$)", re.MULTILINE),
+                r"\1 *\2* \3",
+            ),  # Bold with space handling
             (re.compile(r"(?<!\*)\*\*(.+?)\*\*(?!\*)", re.MULTILINE), r"*\1*"),  # Bold
             (re.compile(r"__(.+?)__", re.MULTILINE), r"*\1*"),  # Underline as bold
             (re.compile(r"\[(.+?)\]\((.+?)\)", re.MULTILINE), r"<\2|\1>"),  # Links
             (re.compile(r"`(.+?)`", re.MULTILINE), r"`\1`"),  # Inline code
             (re.compile(r"^> (.+)", re.MULTILINE), r"> \1"),  # Blockquote
-            (re.compile(r"^(---|\*\*\*|___)$", re.MULTILINE), r"──────────"),  # Horizontal line
+            (
+                re.compile(r"^(---|\*\*\*|___)$", re.MULTILINE),
+                r"──────────",
+            ),  # Horizontal line
             (re.compile(r"~~(.+?)~~", re.MULTILINE), r"~\1~"),  # Strikethrough
         ]
         # Placeholders for triple emphasis
@@ -170,6 +189,7 @@ class SlackMarkdownConverter:
 
         return line.rstrip()
 
+
 class SlackEndpoint(Endpoint):
     def _invoke(self, r: Request, values: Mapping, settings: Mapping) -> Response:
         """
@@ -236,7 +256,9 @@ class SlackEndpoint(Endpoint):
                                     f"Current channel: {current_channel_with_hash} is not allowed."
                                 ),
                             )
-                            return Response(status=200, response="ok", content_type="text/plain")
+                            return Response(
+                                status=200, response="ok", content_type="text/plain"
+                            )
                     except SlackApiError as e:
                         print(f"Error getting channel info: {e}")
                         try:
@@ -249,7 +271,9 @@ class SlackEndpoint(Endpoint):
                             )
                         except SlackApiError:
                             pass
-                        return Response(status=200, response="ok", content_type="text/plain")
+                        return Response(
+                            status=200, response="ok", content_type="text/plain"
+                        )
                     except Exception as e:
                         print(f"Unexpected error: {e}")
                         try:
@@ -262,7 +286,9 @@ class SlackEndpoint(Endpoint):
                             )
                         except SlackApiError:
                             pass
-                        return Response(status=200, response="ok", content_type="text/plain")
+                        return Response(
+                            status=200, response="ok", content_type="text/plain"
+                        )
 
                 try:
                     # Create a key to check if the conversation already exists
@@ -286,13 +312,17 @@ class SlackEndpoint(Endpoint):
                             # user list in the thread
                             user_id_list = []
                             # pattern to extract user id from slack message
-                            pattern = r'<@([^>]+)>'
+                            pattern = r"<@([^>]+)>"
                             # Format messages for context
                             for msg in messages:
                                 role = "assistant" if msg.get("bot_id") else "user"
                                 content = msg.get("text", "")
                                 thread_history.append(
-                                    {"role": role, "participant_id": msg.get("user", "unknown"), "content": content}
+                                    {
+                                        "role": role,
+                                        "participant_id": msg.get("user", "unknown"),
+                                        "content": content,
+                                    }
                                 )
                                 user_id = msg.get("user", "unknown")
                                 if user_id != "unknown" and user_id not in user_id_list:
@@ -317,7 +347,9 @@ class SlackEndpoint(Endpoint):
                                     "real_name", ""
                                 )
                                 if user_display_name != "":
-                                    user_display_name_map[user_id] = user_real_name + " (" + user_display_name + ")"
+                                    user_display_name_map[user_id] = (
+                                        user_real_name + " (" + user_display_name + ")"
+                                    )
                                 else:
                                     user_display_name_map[user_id] = user_real_name
                         except SlackApiError as e:
@@ -325,6 +357,7 @@ class SlackEndpoint(Endpoint):
 
                         # add user display name to thread history
                         pattern = r"<@([A-Za-z0-9]+)>"
+
                         def replace_id_with_name(match):
                             user_id = match.group(1)  # <@...>の...部分を取り出す
                             # user_display_name_mapに存在する場合のみ置換
@@ -333,23 +366,71 @@ class SlackEndpoint(Endpoint):
                             else:
                                 # 不明なIDの場合はそのままにしておく
                                 return match.group(0)
+
                         for msg in thread_history:
-                            msg["participant_name"] = user_display_name_map.get(msg.get("participant_id", "unknown"), "unknown")
-                            msg["content"] = re.sub(pattern, replace_id_with_name, msg["content"])
+                            msg["participant_name"] = user_display_name_map.get(
+                                msg.get("participant_id", "unknown"), "unknown"
+                            )
+                            msg["content"] = re.sub(
+                                pattern, replace_id_with_name, msg["content"]
+                            )
+
+                    uploaded_files = []
+                    slack_files = event.get("files", [])
+                    if slack_files:
+                        for f in slack_files:
+                            file_name = f.get("name")
+                            file_url = f.get("url_private_download")
+                            file_mimetype = f.get(
+                                "mimetype", "application/octet-stream"
+                            )
+                            if not file_url or not file_name:
+                                continue
+
+                            headers = {"Authorization": f"Bearer {token}"}
+                            resp = requests.get(file_url, headers=headers)
+                            if resp.status_code == 200:
+                                try:
+                                    storage_file = self.session.file.upload(
+                                        filename=file_name,
+                                        content=resp.content,
+                                        mimetype=file_mimetype,
+                                    )
+                                    if storage_file:
+                                        uploaded_files.append(storage_file)
+                                except Exception as e:
+                                    print(
+                                        f"Error uploading file via session.file.upload: {e}"
+                                    )
+                            else:
+                                print(
+                                    f"Failed to download file from Slack: {file_name}, status code={resp.status_code}"
+                                )
 
                     # Invoke the Dify app with the message
+                    app_invoke_inputs = {
+                        "thread_history": json.dumps(
+                            thread_history, indent=4, ensure_ascii=False
+                        ),
+                        "thread_users": json.dumps(
+                            user_display_name_map, indent=4, ensure_ascii=False
+                        ),
+                        "thread_ts": thread_ts,
+                    }
+                    if uploaded_files:
+                        app_invoke_inputs["files"] = [
+                            {
+                                "type": uf.type,
+                                "transfer_method": "remote_url",
+                                "url": uf.preview_url,
+                            }
+                            for uf in uploaded_files
+                        ]
+
                     invoke_params = {
                         "app_id": settings["app"]["app_id"],
                         "query": re.sub(pattern, replace_id_with_name, message),
-                        "inputs": {
-                            "thread_history": json.dumps(
-                                thread_history, indent=4, ensure_ascii=False
-                            ),
-                            "thread_users": json.dumps(
-                                user_display_name_map, indent=4, ensure_ascii=False
-                            ),
-                            "thread_ts": thread_ts,
-                        },
+                        "inputs": app_invoke_inputs,
                         "response_mode": "blocking",
                     }
                     if conversation_id is not None:
@@ -378,17 +459,17 @@ class SlackEndpoint(Endpoint):
                         ]
 
                         # ブロードキャストするかどうか
-                        reply_broadcast = settings.get("first_reply_broadcast", False) and len(thread_history) == 1
+                        reply_broadcast = (
+                            settings.get("first_reply_broadcast", False)
+                            and len(thread_history) == 1
+                        )
 
                         for i, chunk in enumerate(chunks):
                             # 分割したチャンクを blocks に載せる
                             answer_blocks = [
                                 {
                                     "type": "section",
-                                    "text": {
-                                        "type": "mrkdwn",
-                                        "text": chunk
-                                    }
+                                    "text": {"type": "mrkdwn", "text": chunk},
                                 }
                             ]
                             # 2つ目以降のメッセージでブロードキャストされるとスレッド外にも大量に通知されてしまうので、
@@ -400,10 +481,12 @@ class SlackEndpoint(Endpoint):
                                 text=chunk,  # fallback用テキスト
                                 thread_ts=thread_ts,
                                 blocks=answer_blocks,
-                                reply_broadcast=chunk_reply_broadcast
+                                reply_broadcast=chunk_reply_broadcast,
                             )
 
-                        return Response(status=200, response="ok", content_type="text/plain")
+                        return Response(
+                            status=200, response="ok", content_type="text/plain"
+                        )
 
                     except SlackApiError as e:
                         return Response(

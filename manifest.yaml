@@ -14,7 +14,7 @@ description:
   pt_BR: "Plugin de bot do Slack para respostas em thread (opcionalmente postando a primeira resposta no canal), formatação mrkdwn, acesso ao histórico de thread e lista de usuários, e restrição opcional de canais de uso."
 icon: icon.svg
 resource:
-  memory: 268435456
+  memory: 536870912
   permission:
     tool:
       enabled: true
