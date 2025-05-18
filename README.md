@@ -37,7 +37,7 @@ However, this plugin requires different scopes:
 
 ```text
 app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write, channels:read,
-groups:read
+groups:read, files:read
 ```
 
 For details on how to set up the official SlackBot plugin, see:

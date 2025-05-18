@@ -37,7 +37,7 @@ https://github.com/solaoi/dify-plugin-slack-thread-bot
 
 ```text
 app_mentions:read, users:read, channels:history, groups:history, chat:write, groups:write, channels:read,
-groups:read
+groups:read, files:read
 ```
 
 有关如何设置官方 SlackBot 插件的详细信息，请参阅：
