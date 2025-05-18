@@ -19,11 +19,11 @@
 - 在 Slack 线程中回复（可选设置同时在频道中发送首条回复）
 - Slack 文件上传（自动传递给关联的应用）
 - 在回复中支持 Slack `mrkdwn` 格式
-- 从关联的应用中访问线程会话历史、用户信息，以及 Slack 线程时间戳（ `thread_ts` ）
+- 从关联的应用中访问线程会话历史、用户信息，以及 Slack 线程信息（`channel_id`, `thread_ts`）
 - 可选择将使用范围限定至单个 Slack 频道，以实现更安全的使用
 
 > [!NOTE]
-> `thread_ts` 主要为高级用例提供。在大多数情况下，您可能不需要使用它。
+> `channel_id` 和 `thread_ts` 主要适用于高级用例。在大多数情况下，您可能不需要使用它们。
 
 #### 1. 安装
 
@@ -59,6 +59,7 @@ https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_b
 | thread_users | 段落，最大长度（如 65535） |
 | files | 文件列表 |
 | thread_ts | 文本, 最大长度（如 48，默认） |
+| channel_id | 文本, 最大长度（如 48，默认） |
 
 示例（Chat Flow 应用中的 LLM 节点）：
 
