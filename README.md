@@ -12,11 +12,12 @@
 
 ### Description
 
-Slack bot plugin for thread replies (optionally posting the first reply to the channel), mrkdwn formatting, referencing thread history and user list, and optional usage channel restriction.
+Slack bot plugin for thread replies (optionally posting the first reply to the channel), Slack file uploads, mrkdwn formatting, referencing thread history and user list, and optional usage channel restriction.
 
 #### Features
 
 - Reply within Slack threads (with an optional setting to also post the first reply in the channel)
+- Slack file uploads (automatically passed to a linked app)
 - Support for Slack `mrkdwn` formatting in replies
 - Access to thread conversation history, user information, and the Slack thread timestamp (`thread_ts`) from a linked app
 - Optional restriction to a single Slack channel for more secure usage
@@ -56,6 +57,7 @@ In the start node of the chat flow app that you link to this plugin, you can ref
 | ---- | ---- |
 | thread_history | Paragraph, Max length (e.g., 65535) |
 | thread_users | Paragraph, Max length (e.g., 65535) |
+| files | File List |
 | thread_ts | Short Text, Max length (e.g., 48: Default) |
 
 Example (LLM node in the chat flow app):
