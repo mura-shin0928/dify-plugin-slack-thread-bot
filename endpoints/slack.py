@@ -399,6 +399,18 @@ class SlackEndpoint(Endpoint):
                                     if storage_file:
                                         uploaded_files.append(storage_file)
                                 except Exception as e:
+                                    try:
+                                        client.chat_postMessage(
+                                            channel=channel,
+                                            thread_ts=thread_ts,
+                                            text=(
+                                                f"Error uploading file: {e}\n\n"
+                                                "This may be caused by an unconfigured `FILES_URL` in your `dify/docker/.env` .\n"
+                                                "Please set `FILES_URL` properly and restart( `docker compose down && docker compose up -d` ) your Dify environment, then try again."
+                                            ),
+                                        )
+                                    except SlackApiError:
+                                        pass
                                     print(
                                         f"Error uploading file via session.file.upload: {e}"
                                     )
