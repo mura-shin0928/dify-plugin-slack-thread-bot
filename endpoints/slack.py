@@ -227,8 +227,7 @@ class SlackEndpoint(Endpoint):
                 message = event.get("text", "")
 
                 # Remove the bot mention from the beginning of the message
-                if message.startswith("<@"):
-                    message = message.split("> ", 1)[1] if "> " in message else message
+                message = re.sub(r"^<@[^>]+>\s*", "", message)
 
                 # Get channel ID and thread timestamp
                 channel = event.get("channel", "")
