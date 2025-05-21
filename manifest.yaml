@@ -13,6 +13,7 @@ description:
   zh_Hans: "支持线程回复（可选将首次回复发送至频道）、mrkdwn格式、引用线程历史和用户列表、并可选限制使用频道的Slack机器人插件。"
   pt_BR: "Plugin de bot do Slack para respostas em thread (opcionalmente postando a primeira resposta no canal), formatação mrkdwn, acesso ao histórico de thread e lista de usuários, e restrição opcional de canais de uso."
 icon: icon.svg
+tags: ['productivity','social']
 resource:
   memory: 536870912
   permission:

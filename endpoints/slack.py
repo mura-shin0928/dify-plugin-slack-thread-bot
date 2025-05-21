@@ -465,10 +465,51 @@ class SlackEndpoint(Endpoint):
                         # Slackで指定されている3,000文字以上の場合は分割
                         # https://api.slack.com/reference/block-kit/composition-objects#text__fields
                         MAX_MSG_LEN = 3000
-                        chunks = [
-                            converted_answer[i : i + MAX_MSG_LEN]
-                            for i in range(0, len(converted_answer), MAX_MSG_LEN)
-                        ]
+                        if len(converted_answer) > MAX_MSG_LEN:
+                            lines = converted_answer.split("\n")
+                            chunks = []
+                            current_chunk = ""
+
+                            for line in lines:
+                                # line自体がMAX_MSG_LENを超える場合を考慮
+                                if len(line) > MAX_MSG_LEN:
+                                    # lineをさらにサブ分割
+                                    sub_chunks = [
+                                        line[i : i + MAX_MSG_LEN]
+                                        for i in range(0, len(line), MAX_MSG_LEN)
+                                    ]
+                                    for sub in sub_chunks:
+                                        # current_chunk に積み上げられるなら積む
+                                        if (
+                                            len(current_chunk)
+                                            + (len(sub) + (1 if current_chunk else 0))
+                                            <= MAX_MSG_LEN
+                                        ):
+                                            if current_chunk:
+                                                current_chunk += "\n"
+                                            current_chunk += sub
+                                        else:
+                                            # 今のチャンクを確定させて次へ
+                                            chunks.append(current_chunk)
+                                            current_chunk = sub
+                                else:
+                                    # lineがMAX_MSG_LEN以内なら従来の行ごと処理
+                                    added_length = len(line) + (
+                                        1 if current_chunk else 0
+                                    )
+                                    if len(current_chunk) + added_length <= MAX_MSG_LEN:
+                                        if current_chunk:
+                                            current_chunk += "\n"
+                                        current_chunk += line
+                                    else:
+                                        chunks.append(current_chunk)
+                                        current_chunk = line
+
+                            # 最後に残っていたら追加
+                            if current_chunk:
+                                chunks.append(current_chunk)
+                        else:
+                            chunks = [converted_answer]
 
                         # ブロードキャストするかどうか
                         reply_broadcast = (
