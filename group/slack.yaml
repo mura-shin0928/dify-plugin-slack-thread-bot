@@ -30,6 +30,15 @@ settings:
       pt_BR: Permitir Retentativas
       ja_JP: 再試行を許可
     default: false
+  - name: skip_timeout_error
+    type: boolean
+    required: false
+    label:
+      en_US: Skip App Timeout Error Notifications
+      zh_Hans: 跳过应用程序超时错误通知
+      pt_BR: Pular Notificações de Erro de Timeout do Aplicativo
+      ja_JP: アプリのタイムアウトエラー通知をスキップ
+    default: false
   - name: allowed_channel
     type: text-input
     required: false

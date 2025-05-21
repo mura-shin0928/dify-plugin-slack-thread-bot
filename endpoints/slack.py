@@ -548,24 +548,36 @@ class SlackEndpoint(Endpoint):
                             content_type="text/plain",
                         )
                 except Exception as e:
-                    err = traceback.format_exc()
+                    err_msg = str(e)
+                    err_trace = traceback.format_exc()
 
-                    # Send error message to Slack
-                    try:
-                        client.chat_postMessage(
-                            channel=channel,
-                            thread_ts=thread_ts,
-                            text=f"Sorry, I'm having trouble processing your request. Please try again later. Error: {str(e)}",
+                    skip_timeout_error = settings.get("skip_timeout_error", False)
+                    if (
+                        skip_timeout_error
+                        and "invocation exited without response" in err_msg.lower()
+                    ):
+                        return Response(
+                            status=200,
+                            response="ok",
+                            content_type="text/plain",
                         )
-                    except SlackApiError:
-                        # Failed to send error message
-                        pass
+                    else:
+                        # Send error message to Slack
+                        try:
+                            client.chat_postMessage(
+                                channel=channel,
+                                thread_ts=thread_ts,
+                                text=f"Sorry, I'm having trouble processing your request. Please try again later. Error: {err_msg}",
+                            )
+                        except SlackApiError:
+                            # Failed to send error message
+                            pass
 
-                    return Response(
-                        status=200,
-                        response=f"An error occurred: {str(e)}\n{err}",
-                        content_type="text/plain",
-                    )
+                        return Response(
+                            status=200,
+                            response=f"An error occurred: {err_msg}\n{err_trace}",
+                            content_type="text/plain",
+                        )
             else:
                 # Other event types we're not handling
                 return Response(status=200, response="ok")
