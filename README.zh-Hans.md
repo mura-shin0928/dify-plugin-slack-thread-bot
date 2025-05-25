@@ -23,7 +23,7 @@
 - 可选择将使用范围限定至单个 Slack 频道，以实现更安全的使用
 
 > [!NOTE]
-> `channel_id` 和 `thread_ts` 主要适用于高级用例。在大多数情况下，您可能不需要使用它们。
+> `channel_id` 和 `thread_ts` 主要适用于高级用例。在大多数情况下，您可能不需要使用它们。然而，如果安装了 [Slack Post](https://github.com/solaoi/dify-plugin-slack-post) 插件，就可以方便地利用这些参数在特定频道或线程中发送消息，从而使 Slack Thread Bot 与您的应用程序实现更深度的集成。
 
 #### 1. 安装
 

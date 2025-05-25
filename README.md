@@ -23,7 +23,7 @@ Slack bot plugin for thread replies (optionally posting the first reply to the c
 - Optional restriction to a single Slack channel for more secure usage
 
 > [!NOTE]
-> The `channel_id` and `thread_ts` are primarily provided for advanced use cases. In most scenarios, you likely won't need to use them.
+> The `channel_id` and `thread_ts` are primarily provided for advanced use cases. In most scenarios, you likely won't need to use them. However, if you have the [Slack Post](https://github.com/solaoi/dify-plugin-slack-post) plugin installed, these parameters can be conveniently leveraged to post messages to specific channels or threads, enabling deeper integration between Slack Thread Bot and your apps.
 
 #### 1. Install
 
