@@ -7,7 +7,7 @@
 <img width="120" alt="Image" src="_assets/icon.svg">
 
 **Author:** solaoi
-**Version:** 0.0.4
+**Version:** 0.0.5
 **Type:** extension
 
 ### Description
