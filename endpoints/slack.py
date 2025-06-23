@@ -360,6 +360,7 @@ class SlackEndpoint(Endpoint):
 
                     # Get thread history for better context
                     thread_history = []
+                    user_id_list = []
                     if thread_ts:
                         messages = self._load_cached_history(channel, thread_ts)
                         if not messages:
@@ -398,12 +399,11 @@ class SlackEndpoint(Endpoint):
                             for m in messages:
                                 self._append_thread_message(channel, thread_ts, m)
 
-                            # user list in the thread
-                            user_id_list = []
-                            # pattern to extract user id from slack message
-                            pattern = r"<@([^>]+)>"
-                            # Format messages for context
-                            for msg in messages:
+                        # user list in the thread
+                        # pattern to extract user id from slack message
+                        pattern = r"<@([^>]+)>"
+                        # Format messages for context
+                        for msg in messages:
                                 role = "assistant" if msg.get("bot_id") else "user"
                                 content = msg.get("text", "")
                                 thread_history.append(
