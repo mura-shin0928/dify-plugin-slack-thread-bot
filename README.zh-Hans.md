@@ -1,4 +1,4 @@
-*以其他语言阅读：[English](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.4/README.md)，[日本語](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.4/README.ja.md)，[Português](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.4/README.pt_BR.md)。*
+*以其他语言阅读：[English](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.5/README.md)，[日本語](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.5/README.ja.md)，[Português](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.5/README.pt_BR.md)。*
 
 ![license](https://img.shields.io/github/license/solaoi/dify-plugin-slack-thread-bot)
 
