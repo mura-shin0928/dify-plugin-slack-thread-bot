@@ -2,6 +2,7 @@ import json
 import re
 import traceback
 import requests
+import time
 from typing import Mapping, List, Tuple
 from werkzeug import Request, Response
 from dify_plugin import Endpoint
@@ -191,6 +192,53 @@ class SlackMarkdownConverter:
 
 
 class SlackEndpoint(Endpoint):
+    CACHE_PREFIX = "thread-cache"
+    CACHE_DURATION = 60 * 60 * 24  # 1 day
+
+    def _load_cached_history(self, channel: str, thread_ts: str):
+        key = f"{self.CACHE_PREFIX}-{channel}-{thread_ts}"
+        try:
+            raw = self.session.storage.get(key)
+            if raw:
+                data = json.loads(raw.decode("utf-8"))
+            else:
+                return []
+        except Exception:
+            return []
+
+        now = time.time()
+        messages = [m for m in data.get("messages", []) if now - m.get("saved_at", now) < self.CACHE_DURATION]
+        if len(messages) != len(data.get("messages", [])):
+            data["messages"] = messages
+            data["last_cleanup"] = now
+            try:
+                self.session.storage.set(key, json.dumps(data).encode("utf-8"))
+            except Exception:
+                pass
+        return messages
+
+    def _append_thread_message(self, channel: str, thread_ts: str, message: Mapping):
+        key = f"{self.CACHE_PREFIX}-{channel}-{thread_ts}"
+        now = time.time()
+        try:
+            raw = self.session.storage.get(key)
+            if raw:
+                data = json.loads(raw.decode("utf-8"))
+            else:
+                data = {"messages": [], "last_cleanup": now}
+        except Exception:
+            data = {"messages": [], "last_cleanup": now}
+
+        data["messages"] = [m for m in data.get("messages", []) if now - m.get("saved_at", now) < self.CACHE_DURATION]
+        msg = dict(message)
+        msg["saved_at"] = now
+        data["messages"].append(msg)
+        data["last_cleanup"] = now
+        try:
+            self.session.storage.set(key, json.dumps(data).encode("utf-8"))
+        except Exception:
+            pass
+
     def _invoke(self, r: Request, values: Mapping, settings: Mapping) -> Response:
         """
         Invokes the endpoint with the given request.
@@ -237,6 +285,18 @@ class SlackEndpoint(Endpoint):
                 # Process the message and respond
                 token = settings.get("bot_token")
                 client = WebClient(token=token)
+
+                # store the incoming app mention message
+                self._append_thread_message(
+                    channel,
+                    thread_ts,
+                    {
+                        "ts": event.get("ts"),
+                        "text": event.get("text", ""),
+                        "user": event.get("user"),
+                        "bot_id": event.get("bot_id"),
+                    },
+                )
 
                 # allowed_channel が指定されているかチェック
                 if allowed_channel_setting:
@@ -300,20 +360,50 @@ class SlackEndpoint(Endpoint):
 
                     # Get thread history for better context
                     thread_history = []
+                    user_id_list = []
                     if thread_ts:
-                        # get thread history
-                        try:
-                            replies = client.conversations_replies(
-                                channel=channel, ts=thread_ts
-                            )
-                            messages = replies.get("messages", [])
+                        messages = self._load_cached_history(channel, thread_ts)
+                        if not messages:
+                            try:
+                                replies = client.conversations_replies(
+                                    channel=channel, ts=thread_ts
+                                )
+                                messages = replies.get("messages", [])
+                            except SlackApiError as e:
+                                if e.response.get("error") == "ratelimited":
+                                    # Get retry-after header from Slack's response
+                                    retry_after = int(e.response.get("headers", {}).get("Retry-After", 60))
+                                    try:
+                                        client.chat_postMessage(
+                                            channel=channel,
+                                            thread_ts=thread_ts,
+                                            text=f"Rate limit reached when retrieving thread. Retrying in {retry_after} seconds...",
+                                        )
+                                    except SlackApiError:
+                                        pass
+                                    time.sleep(retry_after)
+                                    try:
+                                        replies = client.conversations_replies(
+                                            channel=channel, ts=thread_ts
+                                        )
+                                        messages = replies.get("messages", [])
+                                    except SlackApiError as e:
+                                        print(
+                                            f"Error getting thread history after retry: {e}"
+                                        )
+                                        messages = []
+                                else:
+                                    print(f"Error getting thread history: {e}")
+                                    messages = []
 
-                            # user list in the thread
-                            user_id_list = []
-                            # pattern to extract user id from slack message
-                            pattern = r"<@([^>]+)>"
-                            # Format messages for context
-                            for msg in messages:
+                            for m in messages:
+                                self._append_thread_message(channel, thread_ts, m)
+
+                        # user list in the thread
+                        # pattern to extract user id from slack message
+                        pattern = r"<@([^>]+)>"
+                        # Format messages for context
+                        for msg in messages:
                                 role = "assistant" if msg.get("bot_id") else "user"
                                 content = msg.get("text", "")
                                 thread_history.append(
@@ -331,8 +421,7 @@ class SlackEndpoint(Endpoint):
                                     for user_id in user_ids:
                                         if user_id not in user_id_list:
                                             user_id_list.append(user_id)
-                        except SlackApiError as e:
-                            print(f"Error getting thread history: {e}")
+
 
                         # get user display name map from user id list
                         user_display_name_map = {}
@@ -529,12 +618,22 @@ class SlackEndpoint(Endpoint):
                             # 必要に応じて一度目のみブロードキャストにする
                             chunk_reply_broadcast = reply_broadcast if i == 0 else False
 
-                            client.chat_postMessage(
+                            resp = client.chat_postMessage(
                                 channel=channel,
                                 text=chunk,  # fallback用テキスト
                                 thread_ts=thread_ts,
                                 blocks=answer_blocks,
                                 reply_broadcast=chunk_reply_broadcast,
+                            )
+                            self._append_thread_message(
+                                channel,
+                                thread_ts,
+                                {
+                                    "ts": resp.get("ts"),
+                                    "text": chunk,
+                                    "user": resp.get("message", {}).get("user"),
+                                    "bot_id": resp.get("message", {}).get("bot_id"),
+                                },
                             )
 
                         return Response(
@@ -578,6 +677,36 @@ class SlackEndpoint(Endpoint):
                             response=f"An error occurred: {err_msg}\n{err_trace}",
                             content_type="text/plain",
                         )
+            elif event.get("type") == "message":
+                channel = event.get("channel", "")
+                thread_ts = event.get("thread_ts") or event.get("ts")
+                recognized = False
+                key_to_check = f"slack-{channel}-{thread_ts}"
+                try:
+                    if self.session.storage.get(key_to_check):
+                        recognized = True
+                except Exception:
+                    pass
+                if not recognized:
+                    try:
+                        if self.session.storage.get(
+                            f"{self.CACHE_PREFIX}-{channel}-{thread_ts}"
+                        ):
+                            recognized = True
+                    except Exception:
+                        pass
+                if recognized:
+                    self._append_thread_message(
+                        channel,
+                        thread_ts,
+                        {
+                            "ts": event.get("ts"),
+                            "text": event.get("text", ""),
+                            "user": event.get("user"),
+                            "bot_id": event.get("bot_id"),
+                        },
+                    )
+                return Response(status=200, response="ok")
             else:
                 # Other event types we're not handling
                 return Response(status=200, response="ok")
