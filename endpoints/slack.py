@@ -370,15 +370,17 @@ class SlackEndpoint(Endpoint):
                                 messages = replies.get("messages", [])
                             except SlackApiError as e:
                                 if e.response.get("error") == "ratelimited":
+                                    # Get retry-after header from Slack's response
+                                    retry_after = int(e.response.get("headers", {}).get("Retry-After", 60))
                                     try:
                                         client.chat_postMessage(
                                             channel=channel,
                                             thread_ts=thread_ts,
-                                            text="Rate limit reached when retrieving thread. Retrying in about a minute...",
+                                            text=f"Rate limit reached when retrieving thread. Retrying in {retry_after} seconds...",
                                         )
                                     except SlackApiError:
                                         pass
-                                    time.sleep(65)
+                                    time.sleep(retry_after)
                                     try:
                                         replies = client.conversations_replies(
                                             channel=channel, ts=thread_ts
