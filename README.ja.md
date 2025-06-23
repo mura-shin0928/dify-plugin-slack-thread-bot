@@ -41,6 +41,13 @@ app_mentions:read, users:read, channels:history, groups:history, chat:write, gro
 groups:read, files:read
 ```
 
+また、Slackアプリの設定で「Subscribe to bot events」を構成する際、以下のイベントを追加する必要があります：
+- `app_mention` - ボットがメンションされたとき
+- `message.channels` - パブリックチャンネルでメッセージを受信（スレッドキャッシュに必要）
+- `message.groups` - プライベートチャンネルでメッセージを受信（スレッドキャッシュに必要）
+
+`message.channels`と`message.groups`イベントは、ボットのキャッシング機能に不可欠です。これにより、Slackの厳しいレート制限（スレッド履歴取得は1分間に1回）を回避し、レート制限に達することなくリアルタイムでスレッドのコンテキストを維持できます。
+
 公式のSlackBotプラグインのセットアップ手順については以下をご参照ください。
 
 https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_bot/README.md

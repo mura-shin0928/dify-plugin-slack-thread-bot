@@ -41,6 +41,13 @@ app_mentions:read, users:read, channels:history, groups:history, chat:write, gro
 groups:read, files:read
 ```
 
+另外，在配置 Slack 应用的"Subscribe to bot events"时，需要添加以下事件：
+- `app_mention` - 当有人提及你的机器人时
+- `message.channels` - 接收公共频道中的消息（线程缓存所必需）
+- `message.groups` - 接收私有频道中的消息（线程缓存所必需）
+
+`message.channels` 和 `message.groups` 事件对于机器人的缓存机制至关重要，这有助于避免 Slack 严格的速率限制（线程历史记录每分钟只能请求一次）。这使得机器人能够实时维护线程上下文而不会触发速率限制。
+
 有关如何设置官方 SlackBot 插件的详细信息，请参阅：
 
 https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_bot/README.md

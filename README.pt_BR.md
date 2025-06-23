@@ -41,6 +41,13 @@ app_mentions:read, users:read, channels:history, groups:history, chat:write, gro
 groups:read, files:read
 ```
 
+Além disso, ao configurar "Subscribe to bot events" nas configurações do seu aplicativo Slack, você precisa adicionar os seguintes eventos:
+- `app_mention` - Quando alguém menciona seu bot
+- `message.channels` - Para receber mensagens em canais públicos (necessário para cache de threads)
+- `message.groups` - Para receber mensagens em canais privados (necessário para cache de threads)
+
+Os eventos `message.channels` e `message.groups` são essenciais para o mecanismo de cache do bot, que ajuda a evitar os limites de taxa rigorosos do Slack (1 solicitação por minuto para histórico de threads). Isso permite que o bot mantenha o contexto da thread em tempo real sem atingir os limites de taxa.
+
 Para mais detalhes sobre como configurar o plugin oficial SlackBot, consulte:
 
 https://github.com/langgenius/dify-official-plugins/blob/main/extensions/slack_bot/README.md
