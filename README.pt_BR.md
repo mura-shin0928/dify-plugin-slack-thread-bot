@@ -1,13 +1,13 @@
-*Leia em outros idiomas: [English](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.5/README.md), [日本語](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.5/README.ja.md), [简体中文](https://github.com/solaoi/dify-plugin-slack-thread-bot/blob/v0.0.5/README.zh-Hans.md).*
+*Leia em outros idiomas: [English](https://github.com/mura-shin0928/dify-plugin-slack-thread-bot/blob/v0.0.5/README.md), [日本語](https://github.com/mura-shin0928/dify-plugin-slack-thread-bot/blob/v0.0.5/README.ja.md), [简体中文](https://github.com/mura-shin0928/dify-plugin-slack-thread-bot/blob/v0.0.5/README.zh-Hans.md).*
 
-![license](https://img.shields.io/github/license/solaoi/dify-plugin-slack-thread-bot)
+![license](https://img.shields.io/github/license/mura-shin0928/dify-plugin-slack-thread-bot)
 
 ## Slack Thread Bot
 
 <img width="120" alt="Image" src="_assets/icon.svg">
 
-**Author:** solaoi
-**Version:** 0.0.5
+**Author:** mura-shin0928
+**Version:** 0.0.1
 **Type:** extensão
 
 ### Descrição
@@ -23,13 +23,13 @@ Plugin de bot do Slack para respostas em thread (opcionalmente postando a primei
 - Restrição opcional a um único canal do Slack para maior segurança
 
 > [!NOTE]
-> `channel_id` e `thread_ts` são fornecidos principalmente para casos de uso avançados. Na maioria dos cenários, você provavelmente não precisará utilizá-los. No entanto, se você tiver o [Slack Post](https://github.com/solaoi/dify-plugin-slack-post) instalado, esses parâmetros podem ser convenientemente aproveitados para postar mensagens em canais ou threads específicos, permitindo uma integração mais profunda entre o Slack Thread Bot e seus aplicativos.
+> `channel_id` e `thread_ts` são fornecidos principalmente para casos de uso avançados. Na maioria dos cenários, você provavelmente não precisará utilizá-los. No entanto, se você tiver o [Slack Post](https://github.com/mura-shin0928/dify-plugin-slack-post) instalado, esses parâmetros podem ser convenientemente aproveitados para postar mensagens em canais ou threads específicos, permitindo uma integração mais profunda entre o Slack Thread Bot e seus aplicativos.
 
 #### 1. Instalação
 
 Para instalar este plugin, ao selecionar "Instale o plugin", especifique o seguinte repositório do GitHub:
 
-https://github.com/solaoi/dify-plugin-slack-thread-bot
+https://github.com/mura-shin0928/dify-plugin-slack-thread-bot
 
 #### 2. Configuração
 
